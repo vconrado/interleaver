@@ -40,9 +40,9 @@ int main(int argc, char *argv[]) {
   // create array to store input files metadata
   input_files = (input_file *)malloc(sizeof(input_file) * n_files);
 
-  // try to open all input 12 files
+  // try to open all input files
   for (i = 0; i < n_files; ++i) {
-    input_files[i].file_name = argv[i * 2 + 2];
+    input_files[i].file_name = argv[i * 2 + 1];
     input_files[i].file      = fopen(input_files[i].file_name, "rb");
 
     if (input_files[i].file == NULL) {
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
       free(input_files);
       return 3;
     }
-    input_files[i].bytes = atoi(argv[i * 2 + 3]);
+    input_files[i].bytes = atoi(argv[i * 2 + 2]);
     fseek(input_files[i].file, 0L, SEEK_END);
     input_files[i].size = ftell(input_files[i].file);
     fseek(input_files[i].file, 0L, SEEK_SET);
@@ -69,7 +69,6 @@ int main(int argc, char *argv[]) {
       return 3;
     }
     total_bytes += input_files[i].bytes;
-    //printf("Open: %s %d\n", argv[i * 2 + 2], input_files[i].bytes);
   }
 
   // check if file's size is compatible
@@ -91,7 +90,7 @@ int main(int argc, char *argv[]) {
   buffer = (int8_t *)malloc(sizeof(int8_t) * total_bytes);
 
   // try to open output file
-  out_file = fopen(argv[1], "wb");
+  out_file = fopen(argv[argc-1], "wb");
 
   if (out_file == NULL) {
         fprintf(stderr, "Was not possible to create output file '%s'\n",
@@ -126,7 +125,7 @@ int main(int argc, char *argv[]) {
 void usage(int argc, char **argv) {
   fprintf(
     stderr,
-    "Usage: %s output file1 nbytes1 file2 nbytes2 [fileN nbytesN]\n",
+    "Usage: %s file1 nbytes1 file2 nbytes2 [fileN nbytesN] output_file\n",
     argv[0]);
 }
 
